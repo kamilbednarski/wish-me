@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log in
+{% endblock %}
+
+{% block main %}
+    <div class="form-container border">
+        <div class="text-center">
+            <label class="form-label-l">Log in</label>
+        </div>
+        <form action="/login" method="post" id="login_form">
+            <!-- Username -->
+            <div class="form-group">
+                <div class="text-center">
+                    <label class="form-label-m ">Username and password</label>
+                </div>
+                <input autocomplete="off" autofocus class="form-control form-input" name="username" placeholder="Username" type="text" required>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <input class="form-control form-input" name="password" placeholder="Password" type="password" required>
+            </div>
+
+            <!-- Button Log in -->
+            <div class="text-center">
+                <button class="form-button border" type="submit">Log in</button>
+            </div>
+        </form>
+
+        <!-- Register -->
+        <div class="form-goup text-center mt-4">
+            <div>
+                <label class="form-label-m ">Don't have an account?</label>
+            </div>
+            <div class="text-center">
+                <a href="/register">Create one and join wish.me!</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

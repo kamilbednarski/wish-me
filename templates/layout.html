@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Font awesome -->
+        <script src="https://kit.fontawesome.com/45fc05582a.js" crossorigin="anonymous"></script>
+
+        <!-- Google fonts connection -->
+        <link rel="preconnect" href="https://fonts.gstatic.com"> 
+        <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&family=Modak&family=Varela+Round&display=swap" rel="stylesheet">
+        
+        <!-- documentation at http://getbootstrap.com/docs/4.1/, alternative themes at https://bootswatch.com/ -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Bootstrap Date-Picker Plugin -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+
+        <!-- https://favicon.io/emoji-favicons/money-mouth-face/ -->
+        <link href="/static/favicon.ico" rel="icon">
+
+        <!-- CSS styles import -->
+        <link href="/static/styles.css" rel="stylesheet">
+
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+        <!-- JavaScript file import-->
+        <!--<script src="/wish-me/script.js"></script>-->
+
+        <title>wish.me - {% block title %}{% endblock %}</title>
+
+    </head>
+
+    <body>
+        <!-- bg-light border -->
+        <nav class="navbar navbar-expand-md navbar-light border nav-bar-color">
+            <div class="logo-surrounding">
+                <i class="fas fa-gift logo-icon"></i><a class="logo" href="/">wish.me</a>
+            </div>
+            <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar">
+                {% if session.user_id %}
+                    <ul class="navbar-nav mr-auto mt-2 px-2">
+                        <li class="nav-item"><a class="nav-link" href="/quote">option</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/buy">option</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/sell">option</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/history">option</a></li>
+                    </ul>
+                    <ul class="navbar-nav ml-auto mt-2 px-2">
+                        <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                    </ul>
+                {% else %}
+                    <ul class="navbar-nav ml-auto mt-2 px-2">
+                        <li class="nav-item"><a class="nav-link" href="/register">Join Us</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/login">Log In</a></li>
+                    </ul>
+                {% endif %}
+            </div>
+        </nav>
+
+        {% if get_flashed_messages() %}
+            <header>
+                <div class="alert alert-primary border text-center" role="alert">
+                    {{ get_flashed_messages() | join(" ") }}
+                </div>
+            </header>
+        {% endif %}
+
+        <main >
+            {% block main %}{% endblock %}
+        </main>
+        <div class="text-center">
+            <footer class="navbar fixed-bottom small text-muted">FOOTER TODO</footer>
+        </div>
+    </body>
+
+</html>
