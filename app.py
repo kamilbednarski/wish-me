@@ -76,18 +76,12 @@ def register():
         city = str(request.form.get("city"))
         country = str(request.form["country"])
 
-        print(name)
-        print(surname)
-        print(username)
-        print(email)
-        print(city)
-        print(country)
-
         # Generate password hash
         hash = generate_password_hash(request.form.get("password"), method='pbkdf2:sha256', salt_length=8)
 
         # Add new user to database, table 'users'
-        db.execute("INSERT INTO users (username, hash, name, surname, email, city, country) VALUES (:iusername, :ihash, :iname, :isurname, :iemail, :icity, :icountry)", iusername=username, ihash=hash, iname=name, isurname=surname, iemail=email, icity=city, icountry=country)
+        db.execute("INSERT INTO users (username, hash, name, surname, email, city, country) VALUES (:iusername, :ihash, :iname, :isurname, :iemail, :icity, :icountry)", 
+                    iusername=username, ihash=hash, iname=name, isurname=surname, iemail=email, icity=city, icountry=country)
 
         return render_template("login.html")
 
@@ -101,9 +95,42 @@ def login():
 
     # Forget any user id
     session.clear()
+    print("START")
 
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
-        return render_template("login.html")
+
+        if not request.form.get("username"):
+            print("NO USERNAME!")
+
+        if not request.form.get("password"):
+            print("NO PASSWORD!")
+
+        # Query database for account details
+        rows = db.execute("SELECT * FROM users WHERE username = :username", username=request.form.get("username"))
+        print(rows[0]['hash'])
+
+        # If there is no user with that username or password do not match, redirect to login
+        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
+            print("ERROR IN LINE 114")
+            return redirect("/login")
+
+        # Remember which user has logged in
+        session["user_id"] = rows[0]["id"]
+        session["username"] = rows[0]["username"]
+
+        # Terminal info
+        print(f"INFO: Starting new session; user_id: {session['user_id']}; username: {session['username']}")
+
+        # Redirect to homepage
+        return redirect("/")
+
     else:
         return render_template("login.html")
+
+
+@app.route("/")
+@login_required
+def index():
+
+    return render_template("index.html")
