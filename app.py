@@ -100,19 +100,22 @@ def login():
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
+        # Username and password input fields are both set to required in html code
+        # Additional check if username was submited
         if not request.form.get("username"):
-            print("NO USERNAME!")
+            print("INFO: INFO: additional username submit check failed")
+            return redirect("/login")
 
+        # Additional check if password was submited
         if not request.form.get("password"):
-            print("NO PASSWORD!")
+            print("INFO: additional password submit check failed")
+            return redirect("/login")
 
         # Query database for account details
-        rows = db.execute("SELECT * FROM users WHERE username = :username", username=request.form.get("username"))
-        print(rows[0]['hash'])
+        rows = db.execute("SELECT id, username, hash FROM users WHERE username = :username", username=request.form.get("username"))
 
         # If there is no user with that username or password do not match, redirect to login
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            print("ERROR IN LINE 114")
             return redirect("/login")
 
         # Remember which user has logged in
