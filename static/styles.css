@@ -1,3 +1,8 @@
+#navbar {
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+}
+
 ::placeholder {
     color: lightgrey !important;    
 }
