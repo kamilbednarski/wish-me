@@ -55,9 +55,11 @@ def register():
         # Generate password hash
         hash = generate_password_hash(request.form.get("password"), method='pbkdf2:sha256', salt_length=8)
 
-        # Add new user to database, table 'users'
+        # Add new user to database, table 'users' and 'images'
         db.execute("INSERT INTO users (username, hash, name, surname, email, city, country) VALUES (:iusername, :ihash, :iname, :isurname, :iemail, :icity, :icountry)", 
                     iusername=username, ihash=hash, iname=name, isurname=surname, iemail=email, icity=city, icountry=country)
+        id = db.execute("SELECT id FROM users WHERE username = :username", username=username)
+        db.execute("INSERT INTO images (id) VALUES (:id)", id=id[0]['id'])
 
         # Redirect to login panel
         return redirect("/login")
@@ -189,7 +191,7 @@ def change_email():
     # This method changes email
     if request.method == "POST":
 
-        # Old password and new password input fields are both set to required in html code
+        # Password and email input fields are both set to required in html code
         # Additional check if password was submited
         if not request.form.get("password"):
             print("INFO: additional password submit check failed; route: change/email")
@@ -211,3 +213,15 @@ def change_email():
 
     else:
         return render_template("changeemail.html")
+
+
+@app.route("/profile/<username>/edit", methods=["GET", "POST"])
+@login_required
+def edit_profile():
+    # This method changes account details
+    if request.method == "POST":
+        
+        return redirect(f"/profile/{session['username']}")
+
+    else:
+        return render_template("profileedit.html")

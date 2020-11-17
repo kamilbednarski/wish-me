@@ -83,6 +83,14 @@ main {
     text-decoration: none;
 }
 
+.text-medium {
+    font-weight: 300;
+}
+
+.icon-gray {
+    color: gray;
+}
+
 h2 {
     font-weight: 300;
 }
