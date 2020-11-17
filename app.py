@@ -131,9 +131,31 @@ def login():
     else:
         return render_template("login.html")
 
+@app.route("/logout")
+@login_required
+def logout():
+    session.clear()
+    return redirect("/login")
 
 @app.route("/")
 @login_required
 def index():
-
     return render_template("index.html")
+
+@app.route("/profile")
+@login_required
+def user():
+    return redirect(f"/profile/{session['username']}")
+
+
+@app.route("/profile/<username>")
+@login_required
+def user_profile(username):
+    user_data = db.execute("SELECT * FROM users WHERE id = :id", id=session["user_id"])
+    name = user_data[0]["name"]
+    surname = user_data[0]["surname"]
+    email = user_data[0]["email"]
+    city = user_data[0]["city"]
+    country = user_data[0]["country"]
+    
+    return render_template("profile.html", username=username, name=name, surname=surname, email=email, city=city, country=country)

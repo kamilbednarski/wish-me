@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Your account
+{% endblock %}
+
+{% block main %}
+    <div>
+        <div class="form-container border">
+            <div class="row">
+                <div class="col">
+                    <h2> Profile </h2>
+                    <hr>
+
+                    <div class="card">
+                        <h4>{{ username }}</h4>
+                        <hr>
+                        <p><strong>{{ name }} {{ surname }}</strong></p>
+                        <p>{{ email }}</p>
+                        <p>{{ city }}</p>
+                        <p>{{ country }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p>PROFILE SITE of {{ username }}</p>
+    </div>
+{% endblock %}
