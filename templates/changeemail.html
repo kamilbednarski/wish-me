@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Change e-mail
+{% endblock %}
+
+{% block main %}
+    <div class="form-container border">
+        <div class="text-center">
+            <label class="form-label-l"><h2>Change e-mail</h2></label>
+        </div>
+        <form action="/change/email" method="post" id="login_form">
+            <!-- New e-mail -->
+            <div class="form-group">
+                <input autocomplete="off" autofocus class="form-control form-input" name="email-new" placeholder="New email" type="text" required>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <input class="form-control form-input" name="password" placeholder="Password" type="password" required>
+            </div>
+
+            <!-- Proceed -->
+            <div class="text-center">
+                <button class="form-button border" type="submit">Proceed</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

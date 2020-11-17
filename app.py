@@ -15,6 +15,7 @@ app = Flask(__name__)
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
+
 # Ensure responses aren't cached
 @app.after_request
 def after_request(response):
@@ -22,6 +23,7 @@ def after_request(response):
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
     return response
+
 
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_FILE_DIR"] = mkdtemp()
@@ -31,6 +33,7 @@ Session(app)
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///wish.db")
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -103,6 +106,7 @@ def login():
     else:
         return render_template("login.html")
 
+
 @app.route("/logout")
 @login_required
 def logout():
@@ -111,11 +115,13 @@ def logout():
     # Redirect to log in panel
     return redirect("/login")
 
+
 @app.route("/")
 @login_required
 def index():
     # TODO
     return render_template("index.html")
+
 
 @app.route("/profile")
 @login_required
@@ -140,6 +146,7 @@ def user_profile(username):
     
     # Render user's account page
     return render_template("profile.html", username=username, name=name, surname=surname, email=email, city=city, country=country)
+
 
 @app.route("/change/password", methods=["GET", "POST"])
 @login_required
@@ -169,6 +176,38 @@ def change_password():
 
         # Update existing hash with new hash
         db.execute("UPDATE users SET hash = :new_hash WHERE id = :id", new_hash=new_hash, id=session['user_id'])
-        
+
+        return redirect("/")
+
     else:
         return render_template("changepassword.html")
+
+
+@app.route("/change/email", methods=["GET", "POST"])
+@login_required
+def change_email():
+    # This method changes email
+    if request.method == "POST":
+
+        # Old password and new password input fields are both set to required in html code
+        # Additional check if password was submited
+        if not request.form.get("password"):
+            print("INFO: additional password submit check failed; route: change/email")
+            return redirect("/change/email")
+
+        # Query database for account details
+        rows = db.execute("SELECT id, username, hash FROM users WHERE id = :id", id=session['user_id'])
+
+        # If there is no user with that id or password do not match, redirect
+        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
+            return redirect("/change/password")
+
+        new_email = request.form.get("email-new")
+
+        # Update existing email with new email
+        db.execute("UPDATE users SET email = :new_email WHERE id = :id", new_email=new_email, id=session['user_id'])
+
+        return redirect("/")
+
+    else:
+        return render_template("changeemail.html")
