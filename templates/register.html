@@ -12,21 +12,6 @@
             <label for="register_form" class="form-label-l"><h2>Create an account</h2></label>
         </div>
         <form action="/register" method="post" id="register_form">
-            <!-- Personals -->
-            <div class="text-center">
-                <label class="form-label-m" for="personals"><h5>Personals</h5></label>
-            </div>
-            <div id="personals">
-                <!-- Name -->
-                <div class="form-group">
-                    <input type="text" autofocus class="form-control form-input" name="first-name" placeholder="Name" required>
-                </div>
-                <!-- Last name -->
-                <div class="form-group">
-                    <input type="text" autofocus class="form-control form-input" name="surname" placeholder="Surname" required>
-                </div>
-            </div>
-
             <!-- Username and password-->
             <div class="text-center">
                 <label class="form-label-m" for="personals"><h5>Username and password</h5></label>
@@ -44,11 +29,21 @@
                 <input class="form-control form-input" name="password-confirm" id="confirm_password" placeholder="Confirm password" type="password" required>
             </div>
 
-            <!-- Username and password-->
+            <!-- Contact info-->
             <div class="text-center">
-                <label class="form-label-m" for="contact_info"><h5>Contact info</h5></label>
+                <label class="form-label-m" for="contact_info"><h5>Contact informations</h5></label>
             </div>
             <div id="contact_info">
+                <!-- Name -->
+                <div class="form-group">
+                    <input type="text" autofocus class="form-control form-input" name="first-name" placeholder="Name" required>
+                </div>
+
+                <!-- Last name -->
+                <div class="form-group">
+                    <input type="text" autofocus class="form-control form-input" name="surname" placeholder="Surname" required>
+                </div>
+
                 <!-- E-mail -->
                 <div class="form-group">
                     <input type="text" autofocus class="form-control form-input" name="email" placeholder="Email" required>
