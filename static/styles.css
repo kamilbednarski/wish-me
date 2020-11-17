@@ -1,5 +1,5 @@
 #navbar {
-    font-weight: 300;
+    font-weight: 400;
 }
 
 ::placeholder {
@@ -8,7 +8,7 @@
 
 body {
     /*background-color: #FAFAFA;*/
-    font-family: 'Lato', sans-serif;
+    font-family: 'Roboto Condensed', sans-serif;
     background-color: #FFF0CC;
     background-image: url('background.png');
     background-size: cover;
@@ -20,6 +20,11 @@ main {
     align-items: center;
     padding-top: 5vh;
     padding-bottom: 5vh;
+    color: darkslategray;
+}
+
+.toggler-button {
+    border: none;
 }
 
 .nav-bar-color {
@@ -36,7 +41,8 @@ main {
     padding-left: 0.3rem;
     padding-right: 0.3rem;
     color: #000000;
-    font-size: xx-large;
+    font-size: 2.5rem;
+    font-weight: 700;
 }
 
 .logo:hover {
@@ -59,19 +65,19 @@ main {
 }
 
 .form-label-l {
-    font-weight: 300;
+    font-weight: 400;
     font-size: 1.5rem;
 }
 
 .form-label-m {
-    font-weight: 300;
+    font-weight: 400;
     font-size: 1rem;
 }
 
 .form-input {
     border-radius: 1.5rem;
     background-color: #FAFAFA;
-    font-weight: 300;
+    font-weight: 400;
     border: none;
 }
 
@@ -80,8 +86,10 @@ main {
     padding: 0.5rem 1rem 0.5rem 1rem;
     background-color: #B1E5DE;
     font-size: 1.5rem;
-    font-weight: 300;
+    font-weight: 400;
     border: none;
+    color: darkslategray;
+    width: 14rem;
 }
 
 .form-button:hover {
@@ -90,11 +98,11 @@ main {
 }
 
 .text-medium {
-    font-weight: 300;
+    font-weight: 400;
 }
 
 .icon-gray {
-    color: gray;
+    color: darkslategray;
 }
 
 .profile-img {
@@ -102,9 +110,9 @@ main {
 }
 
 h2 {
-    font-weight: 300;
+    font-weight: 400;
 }
 
 h5 {
-    font-weight: 300;
+    font-weight: 400;
 }

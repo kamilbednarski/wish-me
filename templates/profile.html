@@ -14,23 +14,46 @@
         <div class="text-center">
             <label class="form-label-l"><h2>@{{ username }}</h2></label>
         </div>
-        <form action="/login" method="post" id="login_form">
-            <!-- Name and surname -->
-            <div class="form-group">
-                <div class="text-center">
-                    <h5>{{ name }} {{ surname }}</h5>
-                </div>
+
+        <!-- Name and surname -->
+        <div class="form-group">
+            <div class="text-center">
+                <h5>{{ name }} {{ surname }}</h5>
             </div>
-            <div class="form-group">
-                <div class="text-center">
-                    <p>
-                        <span class="icon-gray">
-                            <i class="fas fa-map-marker-alt icon-gray"></i>
-                        </span>
-                        <span class="text-medium"> {{ city }}, {{ country }}</span>
-                    </p>
-                </div>
+        </div>
+        <div class="form-group">
+            <div class="text-center">
+                <p>
+                    <span class="icon-gray">
+                        <i class="fas fa-map-marker-alt icon-gray"></i>
+                    </span>
+                    <span class="text-medium"> {{ city }}, {{ country }}</span>
+                </p>
             </div>
+        </div>
+        <div class="form-group">
+            <div class="text-center">
+                <p>
+                    <span class="icon-gray">
+                        <i class="fas fa-at icon-gray"></i>
+                    </span>
+                    <span class="text-medium"> {{ email }}</span>
+                </p>
+            </div>
+        </div>  
+
+        <!-- Button to change password -->
+        <div class="text-center pt-5 pb-3">
+            <form class="text-center" action="/change/email">
+                <input class="form-button" type="submit" value="Change e-mail" />
+            </form>
+        </div>
+
+        <!-- Button to change password -->
+        <div class="text-center">
+            <form class="text-center" action="/change/password">
+                <input class="form-button" type="submit" value="Change password" />
+            </form>
         </div>
     </div>
 {% endblock %}
