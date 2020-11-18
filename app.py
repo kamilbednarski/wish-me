@@ -6,6 +6,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.utils import secure_filename
 
 from helpers import login_required
 
@@ -30,6 +31,13 @@ app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+
+
+# IMPORTANT - configuration of absolute path to store uploaded images
+app.config["IMAGE_UPLOADS"] = "/Users/kamilmac/Documents/Development/wish-me/static/image/uploads"
+# IMPORTANT - configuration of allowed image types
+app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["PNG", "JPG", "JPEG", "GIF", "BMP"]
+
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///wish.db")
@@ -137,7 +145,8 @@ def user():
 def user_profile(username):
     # This method displays user's account card
     # Query database for account details where userids are equal
-    user_data = db.execute("SELECT * FROM users WHERE id = :id", id=session["user_id"])
+    id = session["user_id"]
+    user_data = db.execute("SELECT * FROM users WHERE id = :id", id=id)
 
     # Save data
     name = user_data[0]["name"]
@@ -146,16 +155,9 @@ def user_profile(username):
     city = user_data[0]["city"]
     country = user_data[0]["country"]
     
-    # Search for profile photo
-    user_image = db.execute("SELECT * FROM images WHERE id = :id", id=session["user_id"])
 
-    if user_image[0]["image"] is None:
-        image = url_for('static', filename='profileimg.bmp')
-    else:
-        image = user_image[0]["image"]
-    
     # Render user's account page
-    return render_template("profile.html", username=username, name=name, surname=surname, email=email, city=city, country=country, image=image)
+    return render_template("profile.html", username=username, name=name, surname=surname, email=email, city=city, country=country)
 
 
 
@@ -224,12 +226,28 @@ def change_email():
         return render_template("changeemail.html")
 
 
+
+def allowed_image(filename):
+    # This method validates uploaded image for allowed extensions
+
+    if not "." in filename:
+        return False
+
+    ext = filename.rsplit(".", 1)[1]
+
+    if ext.upper() in app.config["ALLOWED_IMAGE_EXTENSIONS"]:
+        return True
+    else:
+        return False
+
+
 @app.route("/profile/edit", methods=["GET", "POST"])
 @login_required
 def edit_profile():
 
+    id=session["user_id"]
     # Query database for account details where userids are equal
-    user_data = db.execute("SELECT * FROM users WHERE id = :id", id=session["user_id"])
+    user_data = db.execute("SELECT * FROM users WHERE id = :id", id=id)
 
     # Save data
     username = user_data[0]["username"]
@@ -243,29 +261,47 @@ def edit_profile():
     if request.method == "POST":
 
         # If image provided
-        if request.form.get("image"):
-            new_image = request.form.get("image")
-            db.execute("UPDATE images SET image = :new_image WHERE id = :id", new_image=new_image, id=session["user_id"])
+        if request.files:
+            new_image = request.files["image"]
+            # Log info about loaded file
+            print(new_image)
+
+            if new_image.filename == "":
+                print("Image without filename")
+                return redirect(request.url)
+            
+            if not allowed_image(new_image.filename):
+                print("Wrong file extension")
+                return redirect(request.url)
+
+            else:
+                new_file_name = f"{id}.jpg"
+                # Save uploaded image
+                new_image.save(os.path.join(app.config["IMAGE_UPLOADS"], new_file_name))
+
+                # Log info about saved file
+                print("Image saved")
+            
 
         # If name provided
         if request.form.get("name"):
             new_name = request.form.get("name")
-            db.execute("UPDATE users SET name = :new_name WHERE id = :id", new_name=new_name, id=session["user_id"])
+            db.execute("UPDATE users SET name = :new_name WHERE id = :id", new_name=new_name, id=id)
         
         # If surname provided
         if request.form.get("surname"):
             new_surname = request.form.get("surname")
-            db.execute("UPDATE users SET surname = :new_surname WHERE id = :id", new_surname=new_surname, id=session["user_id"])
+            db.execute("UPDATE users SET surname = :new_surname WHERE id = :id", new_surname=new_surname, id=id)
         
         # If city provided
         if request.form.get("city"):
             new_city = request.form.get("city")
-            db.execute("UPDATE users SET city = :new_city WHERE id = :id", new_city=new_city, id=session["user_id"])
+            db.execute("UPDATE users SET city = :new_city WHERE id = :id", new_city=new_city, id=id)
         
         # If country provided
         if request.form.get("country"):
             new_country = request.form.get("country")
-            db.execute("UPDATE users SET name = :new_country WHERE id = :id", new_country=new_country, id=session["user_id"])
+            db.execute("UPDATE users SET name = :new_country WHERE id = :id", new_country=new_country, id=id)
         
         # Render user's account page
         return redirect("/profile")
