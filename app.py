@@ -154,10 +154,16 @@ def user_profile(username):
     email = user_data[0]["email"]
     city = user_data[0]["city"]
     country = user_data[0]["country"]
-    
+
+    images = db.execute("SELECT * FROM images WHERE id = :id", id=id)
+    is_image = images[0]["image"]
+    if is_image == 0:
+        image_source = "profileimg.bmp"
+    if is_image == 1:
+        image_source = f"/uploads/{id}.jpg"
 
     # Render user's account page
-    return render_template("profile.html", username=username, name=name, surname=surname, email=email, city=city, country=country)
+    return render_template("profile.html", username=username, name=name, surname=surname, email=email, city=city, country=country, image_source=image_source)
 
 
 
@@ -266,10 +272,12 @@ def edit_profile():
             # Log info about loaded file
             print(new_image)
 
+            # Check if file has filename
             if new_image.filename == "":
                 print("Image without filename")
                 return redirect(request.url)
             
+            # Check if allowed image extension
             if not allowed_image(new_image.filename):
                 print("Wrong file extension")
                 return redirect(request.url)
@@ -278,6 +286,9 @@ def edit_profile():
                 new_file_name = f"{id}.jpg"
                 # Save uploaded image
                 new_image.save(os.path.join(app.config["IMAGE_UPLOADS"], new_file_name))
+
+                # Save information that user has custom profile image
+                db.execute("UPDATE images SET image=1 WHERE id=:id", id=id)
 
                 # Log info about saved file
                 print("Image saved")
