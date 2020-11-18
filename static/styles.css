@@ -11,8 +11,9 @@ body {
     font-family: 'Roboto Condensed', sans-serif;
     background-color: #FFF0CC;
     background-image: url('/static/image/background.png');
-    background-size: cover;
+    background-size: contain;
     background-position: center;
+    
 }
 
 main {
@@ -87,7 +88,7 @@ h5 {
     border-radius: 1.5rem;
     background-color: #FAFAFA;
     font-weight: 400;
-    border: none;
+    border: none !important;
 }
 
 .form-button {
