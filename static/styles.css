@@ -118,6 +118,7 @@ h5 {
 
 .profile-img {
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .text-href {
