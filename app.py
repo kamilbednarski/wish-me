@@ -1,7 +1,7 @@
 import os
 
 from cs50 import SQL
-from flask import Flask, flash, jsonify, redirect, render_template, request, session
+from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
@@ -146,8 +146,17 @@ def user_profile(username):
     city = user_data[0]["city"]
     country = user_data[0]["country"]
     
+    # Search for profile photo
+    user_image = db.execute("SELECT * FROM images WHERE id = :id", id=session["user_id"])
+
+    if user_image[0]["image"] is None:
+        image = url_for('static', filename='profileimg.bmp')
+    else:
+        image = user_image[0]["image"]
+    
     # Render user's account page
-    return render_template("profile.html", username=username, name=name, surname=surname, email=email, city=city, country=country)
+    return render_template("profile.html", username=username, name=name, surname=surname, email=email, city=city, country=country, image=image)
+
 
 
 @app.route("/change/password", methods=["GET", "POST"])
@@ -215,13 +224,52 @@ def change_email():
         return render_template("changeemail.html")
 
 
-@app.route("/profile/<username>/edit", methods=["GET", "POST"])
+@app.route("/profile/edit", methods=["GET", "POST"])
 @login_required
 def edit_profile():
-    # This method changes account details
+
+    # Query database for account details where userids are equal
+    user_data = db.execute("SELECT * FROM users WHERE id = :id", id=session["user_id"])
+
+    # Save data
+    username = user_data[0]["username"]
+    name = user_data[0]["name"]
+    surname = user_data[0]["surname"]
+    email = user_data[0]["email"]
+    city = user_data[0]["city"]
+    country = user_data[0]["country"]
+
+    # This method displays user's account card
     if request.method == "POST":
+
+        # If image provided
+        if request.form.get("image"):
+            new_image = request.form.get("image")
+            db.execute("UPDATE images SET image = :new_image WHERE id = :id", new_image=new_image, id=session["user_id"])
+
+        # If name provided
+        if request.form.get("name"):
+            new_name = request.form.get("name")
+            db.execute("UPDATE users SET name = :new_name WHERE id = :id", new_name=new_name, id=session["user_id"])
         
-        return redirect(f"/profile/{session['username']}")
+        # If surname provided
+        if request.form.get("surname"):
+            new_surname = request.form.get("surname")
+            db.execute("UPDATE users SET surname = :new_surname WHERE id = :id", new_surname=new_surname, id=session["user_id"])
+        
+        # If city provided
+        if request.form.get("city"):
+            new_city = request.form.get("city")
+            db.execute("UPDATE users SET city = :new_city WHERE id = :id", new_city=new_city, id=session["user_id"])
+        
+        # If country provided
+        if request.form.get("country"):
+            new_country = request.form.get("country")
+            db.execute("UPDATE users SET name = :new_country WHERE id = :id", new_country=new_country, id=session["user_id"])
+        
+        # Render user's account page
+        return redirect("/profile")
 
     else:
-        return render_template("profileedit.html")
+        return render_template("profileedit.html", username=username, name=name, surname=surname, email=email, city=city, country=country)
+

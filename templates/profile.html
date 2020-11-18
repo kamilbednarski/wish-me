@@ -7,20 +7,22 @@
 {% block main %}
     <div class="form-container">
         <div class="text-center pb-4">
-            <img class="profile-img" src={{ url_for('static', filename='profileimg.bmp') }} width="200px" height="200px">
+            <img class="profile-img" src={{ image }} width="200px" height="200px">
         </div>
         
-        <!-- Username -->
-        <div class="text-center">
-            <label class="form-label-l"><h2>@{{ username }}</h2></label>
-        </div>
-
         <!-- Name and surname -->
         <div class="form-group">
             <div class="text-center">
-                <h5>{{ name }} {{ surname }}</h5>
+                <h2>{{ name }} {{ surname }}</h2>
             </div>
         </div>
+
+        <!-- Username -->
+        <div class="text-center">
+            <label class="form-label-l"><h5>@{{ username }}</h5></label>
+        </div>
+        
+        <!-- Location -->
         <div class="form-group">
             <div class="text-center">
                 <p>
@@ -31,6 +33,8 @@
                 </p>
             </div>
         </div>
+
+        <!-- Email -->
         <div class="form-group">
             <div class="text-center">
                 <p>
@@ -42,8 +46,15 @@
             </div>
         </div>  
 
-        <!-- Button to change password -->
+        <!-- Button to edit profile -->
         <div class="text-center pt-5 pb-3">
+            <form class="text-center" action="/profile/edit">
+                <input class="form-button" type="submit" value="Edit profile" />
+            </form>
+        </div>
+
+        <!-- Button to change password -->
+        <div class="text-center pb-3">
             <form class="text-center" action="/change/email">
                 <input class="form-button" type="submit" value="Change e-mail" />
             </form>

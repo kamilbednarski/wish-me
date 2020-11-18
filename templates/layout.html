@@ -51,16 +51,16 @@
             <div class="collapse navbar-collapse" id="navbar">
                 {% if session.user_id %}
                     <ul class="navbar-nav mr-auto mt-2 px-2 pl-3">
-                        <li class="nav-item"><a class="nav-link" href="/">Wishlists</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
+                        <li class="nav-item"><a class="nav-link text-navbar" href="/">Wishlists</a></li>
+                        <li class="nav-item"><a class="nav-link text-navbar" href="/profile">Profile</a></li>
                     </ul>
                     <ul class="navbar-nav ml-auto mt-2 px-2 pl-3">
-                        <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                        <li class="nav-item"><a class="nav-link text-navbar" href="/logout">Log Out</a></li>
                     </ul>
                 {% else %}
                     <ul class="navbar-nav ml-auto mt-2 px-2 pl-3">
-                        <li class="nav-item"><a class="nav-link" href="/register">Join Us</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/login">Log In</a></li>
+                        <li class="nav-item"><a class="nav-link text-navbar" href="/register">Join Us</a></li>
+                        <li class="nav-item"><a class="nav-link text-navbar" href="/login">Log In</a></li>
                     </ul>
                 {% endif %}
             </div>
@@ -78,7 +78,7 @@
             {% block main %}{% endblock %}
         </main>
         <div class="text-center">
-            <footer class="navbar fixed-bottom small text-muted">FOOTER TODO</footer>
+            <footer class="navbar fixed-bottom small text-muted text-navbar">FOOTER TODO</footer>
         </div>
     </body>
 

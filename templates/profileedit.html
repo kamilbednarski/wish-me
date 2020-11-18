@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Your account
+{% endblock %}
+
+{% block main %}
+    <div class="form-container">
+        <div class="text-center">
+            <label class="form-label-l"><h2>Edit profile</h2></label>
+        </div>
+        <form action="/profile/edit" method="post" id="login_form">
+
+            <!-- Profile photo -->
+            <div class="form-group pb-3">
+                <div class="text-center">
+                    <label class="form-label-m "><h5>Add profile image</h5></label>
+                </div>
+                    <input id="image" name="image" type="file" accept="image/*"/>
+                    <label class="file-input text-center" for="image">Choose image</label>
+            </div>
+
+            <!-- Name -->
+            <div class="form-group pt-5">
+                <div class="text-center">
+                    <label class="form-label-m"><h5>Name: {{ name }}</h5></label>
+                </div>
+                <input class="form-control form-input" name="name" placeholder="New name" type="text">
+            </div>
+
+            <!-- Surname -->
+            <div class="form-group pt-3">
+                <div class="text-center">
+                    <label class="form-label-m "><h5>Surname: {{ surname }}</h5></label>
+                </div>
+                <input class="form-control form-input" name="surname" placeholder="New surname" type="text">
+            </div>
+
+            <!-- City -->
+            <div class="form-group pt-3">
+                <div class="text-center">
+                    <label class="form-label-m "><h5>City: {{ city }}</h5></label>
+                </div>
+                <input autocomplete="off" autofocus class="form-control form-input" name="city" placeholder="New city" type="text">
+            </div>
+
+            <!-- Country -->
+            <div class="form-group pt-3">
+                <div class="text-center">
+                    <label class="form-label-m "><h5>Country: {{ country }}</h5></label>
+                </div>
+                <input class="form-control form-input" name="country" placeholder="New country" type="text">
+            </div>
+
+            <!-- Button Save changes -->
+            <div class="text-center pt-3">
+                <button class="form-button" type="submit">Save changes</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -23,6 +23,14 @@ main {
     color: darkslategray;
 }
 
+h2 {
+    font-weight: 400;
+}
+
+h5 {
+    font-weight: 400;
+}
+
 .toggler-button {
     border: none;
 }
@@ -40,14 +48,14 @@ main {
 .logo {
     padding-left: 0.3rem;
     padding-right: 0.3rem;
-    color: #000000;
+    color: darkslategray;
     font-size: 2.5rem;
     font-weight: 700;
 }
 
 .logo:hover {
     text-decoration: none;
-    color: #000000;
+    color: darkslategray;
 }
 
 .logo-surrounding {
@@ -109,10 +117,38 @@ main {
     border-radius: 50%;
 }
 
-h2 {
-    font-weight: 400;
+.text-href {
+    color: #F76EAB;
 }
 
-h5 {
+.text-href:hover {
+    color: #AB3368;
+}
+
+.text-navbar {
+    color: darkslategray !important;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.file-input {
+    border-radius: 1.5rem;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    background-color: #B1E5DE;
+    font-size: 1.5rem;
     font-weight: 400;
+    border: none;
+    color: darkslategray;
+    width: 14rem;
+    position: absolute;
+    margin: auto;
+    right: 0;
+    left: 0;
+}
+
+.file-input:hover {
+    background-color: #9CD4CD;
+    text-decoration: none;
 }
