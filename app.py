@@ -60,6 +60,18 @@ def register():
         city = str(request.form.get("city"))
         country = str(request.form["country"])
 
+        # Check if username avaiable
+        rows = db.execute(db.execute("SELECT username FROM users WHERE username = :username", username=username))
+        if len(rows) != 0:
+            flash('Username already taken.')
+            return redirect("/login")
+
+        # Check if email avaiable
+        rows = db.execute(db.execute("SELECT id FROM users WHERE email = :email", email=email))
+        if len(rows) != 0:
+            flash('E-mail already signed to another account.')
+            return redirect("/login")
+
         # Generate password hash
         hash = generate_password_hash(request.form.get("password"), method='pbkdf2:sha256', salt_length=8)
 
@@ -70,6 +82,7 @@ def register():
         db.execute("INSERT INTO images (id) VALUES (:id)", id=id[0]['id'])
 
         # Redirect to login panel
+        flash('Account created!')
         return redirect("/login")
 
     else:
@@ -111,7 +124,8 @@ def login():
         print(f"INFO: Starting new session; user_id: {session['user_id']}; username: {session['username']}")
 
         # Redirect to homepage
-        return redirect("/")
+        flash('You were successfully logged in.')
+        return redirect(url_for('user'))
 
     else:
         return render_template("login.html")
@@ -123,6 +137,7 @@ def logout():
     # This method is used to log out
     session.clear()
     # Redirect to log in panel
+    flash('Succesfully logged out.')
     return redirect("/login")
 
 
@@ -196,6 +211,7 @@ def change_password():
         # Update existing hash with new hash
         db.execute("UPDATE users SET hash = :new_hash WHERE id = :id", new_hash=new_hash, id=session['user_id'])
 
+        flash('Password changed.')
         return redirect("/")
 
     else:
@@ -214,18 +230,26 @@ def change_email():
             print("INFO: additional password submit check failed; route: change/email")
             return redirect("/change/email")
 
+        # Check if email avaiable
+        rows = db.execute(db.execute("SELECT id FROM users WHERE email = :email", email=request.form.get("email-new")))
+        if len(rows) != 0:
+            flash('E-mail already signed to another account.')
+            return redirect("/change/email")
+
         # Query database for account details
         rows = db.execute("SELECT id, username, hash FROM users WHERE id = :id", id=session['user_id'])
 
         # If there is no user with that id or password do not match, redirect
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            return redirect("/change/password")
+            flash('Wrong password.')
+            return redirect("/change/email")
 
         new_email = request.form.get("email-new")
 
         # Update existing email with new email
         db.execute("UPDATE users SET email = :new_email WHERE id = :id", new_email=new_email, id=session['user_id'])
 
+        flash('E-mail changed.')
         return redirect("/")
 
     else:
@@ -275,6 +299,7 @@ def edit_profile():
             # Check if file has filename
             if new_image.filename == "":
                 print("Image without filename")
+                flash('Image without filename.')
                 return redirect(request.url)
             
             # Check if allowed image extension
@@ -292,6 +317,7 @@ def edit_profile():
 
                 # Log info about saved file
                 print("Image saved")
+                flash('Profile image updated.')
             
 
         # If name provided
@@ -315,6 +341,7 @@ def edit_profile():
             db.execute("UPDATE users SET name = :new_country WHERE id = :id", new_country=new_country, id=id)
         
         # Render user's account page
+        flash('Profile updated.')
         return redirect("/profile")
 
     else:
@@ -328,10 +355,13 @@ def delete_profile():
     id=session["user_id"]
     if request.method == "POST":
 
+        # If both password and password confirmation were sumbitted and are equal
         if request.form.get("password") and request.form.get("password-confirm" and request.form.get("password") == request.form.get("password-confirm")):
             
+            # Find user in database
             rows = db.execute("SELECT hash FROM users WHERE id = :id", id=id)
 
+            # Check if password is correct
             if check_password_hash(rows[0]["hash"], request.form.get("password")):
 
                 # Remove user's data from database
@@ -345,6 +375,7 @@ def delete_profile():
                 print("INFO: user's profile image deleted from image/uploads; route: profile/delete")
 
                 # Redirect to login page
+                flash('Account succesfully deleted.')
                 return redirect("/login")
         
     else:

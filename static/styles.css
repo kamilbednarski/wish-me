@@ -182,3 +182,9 @@ input[type="file"] {
     padding: 0.3rem;
     
 }
+
+.info-alert {
+    background-color: darkslategray;
+    color: #E2F3DE;
+    border: none !important;
+}
