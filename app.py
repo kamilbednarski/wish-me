@@ -42,6 +42,41 @@ app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["PNG", "JPG", "JPEG", "GIF", "BMP"]
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///wish.db")
 
+@app.route("/")
+def index():
+    # Start page for visitors not logged in
+    # Part one of introduction for visitors
+    # TODO
+    return render_template("index.html")
+
+@app.route("/yes")
+def index_yes():
+    # Part two of introduction for visitors
+    # This method renders after positive respond from first page
+    # TODO
+    return render_template("index_yes.html")
+
+@app.route("/no")
+def index_no():
+    # Part two of introduction for visitors
+    # This method redirects after negative respond from first page
+    # TODO
+    return redirect("http://www.google.com")
+
+@app.route("/yes/yes")
+def index_yes_yes():
+    # Part three of introduction for visitors
+    # This method renders after positive respond from second page
+    # TODO
+    return render_template("index.html")
+
+@app.route("/yes/no")
+def index_yes_no():
+    # Part three of introduction for visitors
+    # This method renders after negative respond from second page
+    # TODO
+    return render_template("index.html")
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -139,13 +174,6 @@ def logout():
     # Redirect to log in panel
     flash('Succesfully logged out.')
     return redirect("/login")
-
-
-@app.route("/")
-@login_required
-def index():
-    # TODO
-    return render_template("index.html")
 
 
 @app.route("/profile")

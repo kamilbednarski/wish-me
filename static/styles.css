@@ -52,6 +52,12 @@ h5 {
     color: #000000;
 }
 
+.logo-in-text {
+    color: darkslategray !important;
+    font-size: 4rem;
+    font-weight: 700;
+}
+
 .logo {
     padding-left: 0.3rem;
     padding-right: 0.3rem;
@@ -74,6 +80,14 @@ h5 {
 .form-container {
     width: 80vw;
     max-width: 500px;
+    padding: 70px;
+    border-radius: 4.5rem;
+    background-color: #E2F3DE;
+}
+
+.form-container-large {
+    width: 80vw;
+    max-width: 1200px;
     padding: 70px;
     border-radius: 4.5rem;
     background-color: #E2F3DE;
@@ -220,4 +234,9 @@ input[type="file"] {
 
 .delete-form-no-display {
     display: none;
+}
+
+.image-quiz:hover {
+    transform: scale(1.2);
+    z-index: 1;
 }
