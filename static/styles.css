@@ -34,6 +34,10 @@ h5 {
     font-weight: 400;
 }
 
+.title-icon {
+    background-image: url('/static/image/wish-me-icon.svg');
+}
+
 .toggler-button {
     border: none;
 }
@@ -105,6 +109,22 @@ h5 {
 
 .form-button:hover {
     background-color: #9CD4CD;
+    text-decoration: none;
+}
+
+.form-button-alert {
+    border-radius: 1.5rem;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    background-color: #f76e75;
+    font-size: 1.5rem;
+    font-weight: 400;
+    border: none;
+    color: darkslategray;
+    width: 14rem;
+}
+
+.form-button-alert:hover {
+    background-color: #d35a60;
     text-decoration: none;
 }
 

@@ -321,9 +321,33 @@ def edit_profile():
         return render_template("profileedit.html", username=username, name=name, surname=surname, email=email, city=city, country=country)
 
 
-@app.route("/profile/delete", methods=["GET"])
+@app.route("/profile/delete", methods=["GET", "POST"])
 @login_required
 def delete_profile():
-    return redirect("/login")
+
+    id=session["user_id"]
+    if request.method == "POST":
+
+        if request.form.get("password") and request.form.get("password-confirm" and request.form.get("password") == request.form.get("password-confirm")):
+            
+            rows = db.execute("SELECT hash FROM users WHERE id = :id", id=id)
+
+            if check_password_hash(rows[0]["hash"], request.form.get("password")):
+
+                # Remove user's data from database
+                db.execute("DELETE FROM users WHERE id = :id", id=id)
+                print("INFO: user deleted from users; route: profile/delete")
+                db.execute("DELETE FROM images WHERE id = :id", id=id)
+                print("INFO: user deleted from images; route: profile/delete")
+
+                # Remove user's profile image
+                os.remove(f"/static/image/uploads/{id}.jpg")
+                print("INFO: user's profile image deleted from image/uploads; route: profile/delete")
+
+                # Redirect to login page
+                return redirect("/login")
+        
+    else:
+        return render_template("profiledelete.html")
 
 

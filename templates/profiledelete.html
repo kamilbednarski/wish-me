@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Change password
+{% endblock %}
+
+{% block main %}
+    <div class="form-container">
+        <div class="text-center">
+            <label class="form-label-l"><h2>Delete account</h2></label>
+            <h4>Are you sure?</h4>
+            <h5>This will delete your account permanently and remove your whole data from database.</h5>
+        </div>
+        <form action="/profile/delete" method="post" id="login_form">
+            <!-- Password -->
+            <div class="form-group pt-3">
+                <input autocomplete="off" autofocus class="form-control form-input" name="password" placeholder="Password" type="password" required>
+            </div>
+
+            <!-- Re-enter password -->
+            <div class="form-group">
+                <input class="form-control form-input" name="password-confirm" placeholder="Re-enter password" type="password" required>
+            </div>
+
+            <!-- Sumbit button -->
+            <div class="text-center pt-5">
+                <button class="form-button-alert" type="submit">Delete</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
