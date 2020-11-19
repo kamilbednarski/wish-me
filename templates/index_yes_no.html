@@ -7,26 +7,25 @@
 {% block main %}
     <div class="form-container-large text-center">
         <div>
-            <h2>Hello!<br>We would like to introduce you to <br><span class="logo-in-text">wish.me</span></h2>
-            <h2>Are you ready to open the box?</h2>
-            <!-- Image with gift box-->
+            <h2>You can't be serious...<br>Socks over shiny smartphone?</h2>
+            <!-- Image with socks-->
             <div class="pt-3 pb-3">
-                <img src="/static/image/wish-me-icon.svg" width="200" height="200">
+                <img src="/static/image/socks.svg" width="200" height="200">
             </div>
             
             
             <div class="btn-group" role="group">
-                <!-- Button YES -->
+                <!-- Button SOCKS -->
                 <span class="text-center pt-3 pb-3 inline">
-                    <form class="text-center" action="/yes">
-                        <input class="form-button" type="submit" value="Sure!" />
+                    <form class="text-center" action="/no">
+                        <input class="form-button" type="submit" value="I'll take the socks" />
                     </form>
                 </div>
 
-                <!-- Button NO -->
+                <!-- Button MISCLICK -->
                 <div class="text-center inline">
-                    <form class="text-center" action="/no">
-                        <input class="form-button" type="submit" value="No (Not yet...)" />
+                    <form class="text-center" action="/yes/yes">
+                        <input class="form-button" type="submit" value="Misclick, sorry..." />
                     </form>
                 </div>
             </div>

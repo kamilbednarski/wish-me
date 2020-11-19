@@ -42,40 +42,56 @@ app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["PNG", "JPG", "JPEG", "GIF", "BMP"]
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///wish.db")
 
+@app.route("/<username>")
+def public_profile(username):
+    # Search for username in database
+    user_data = db.execute("SELECT * FROM users WHERE username = :username", username=username)
+    if len(user_data) == 1:
+
+        # Save user data submitted in form
+        username = username
+        name = user_data["0"]["name"]
+        surname = user_data["0"]["surname"]
+        email = user_data["0"]["email"]
+        city = user_data["0"]["city"]
+        country = user_data["0"]["country"]
+
+        return render_template("profile_public.html", name=name, surname=surname, username=username, email=email, city=city, country=country)
+    else:
+        flash("There's no user with that username.")
+        return redirect(url_for('index'))
+
+
+
 @app.route("/")
 def index():
     # Start page for visitors not logged in
     # Part one of introduction for visitors
-    # TODO
     return render_template("index.html")
 
 @app.route("/yes")
 def index_yes():
     # Part two of introduction for visitors
     # This method renders after positive respond from first page
-    # TODO
     return render_template("index_yes.html")
 
 @app.route("/no")
 def index_no():
     # Part two of introduction for visitors
     # This method redirects after negative respond from first page
-    # TODO
     return redirect("http://www.google.com")
 
 @app.route("/yes/yes")
 def index_yes_yes():
     # Part three of introduction for visitors
     # This method renders after positive respond from second page
-    # TODO
-    return render_template("index.html")
+    return render_template("index_yes_yes.html")
 
 @app.route("/yes/no")
 def index_yes_no():
     # Part three of introduction for visitors
     # This method renders after negative respond from second page
-    # TODO
-    return render_template("index.html")
+    return render_template("index_yes_no.html")
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -99,13 +115,13 @@ def register():
         rows = db.execute(db.execute("SELECT username FROM users WHERE username = :username", username=username))
         if len(rows) != 0:
             flash('Username already taken.')
-            return redirect("/login")
+            return redirect(url_for('login'))
 
         # Check if email avaiable
         rows = db.execute(db.execute("SELECT id FROM users WHERE email = :email", email=email))
         if len(rows) != 0:
             flash('E-mail already signed to another account.')
-            return redirect("/login")
+            return redirect(url_for('login'))
 
         # Generate password hash
         hash = generate_password_hash(request.form.get("password"), method='pbkdf2:sha256', salt_length=8)
@@ -118,7 +134,7 @@ def register():
 
         # Redirect to login panel
         flash('Account created!')
-        return redirect("/login")
+        return redirect(url_for('login'))
 
     else:
         return render_template("register.html")
@@ -137,19 +153,19 @@ def login():
         # Additional check if username was submited
         if not request.form.get("username"):
             print("INFO: INFO: additional username submit check failed")
-            return redirect("/login")
+            return redirect(url_for('login'))
 
         # Additional check if password was submited
         if not request.form.get("password"):
             print("INFO: additional password submit check failed")
-            return redirect("/login")
+            return redirect(url_for('login'))
 
         # Query database for account details
         rows = db.execute("SELECT id, username, hash FROM users WHERE username = :username", username=request.form.get("username"))
 
         # If there is no user with that username or password do not match, redirect to login
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            return redirect("/login")
+            return redirect(url_for('login'))
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
@@ -173,7 +189,7 @@ def logout():
     session.clear()
     # Redirect to log in panel
     flash('Succesfully logged out.')
-    return redirect("/login")
+    return redirect(url_for('login'))
 
 
 @app.route("/profile")
@@ -220,18 +236,18 @@ def change_password():
         # Additional check if password was submited
         if not request.form.get("password") or not request.form.get("password-new"):
             print("INFO: additional password submit check failed; route: change/password")
-            return redirect("/change/password")
+            return redirect(url_for('change_password'))
 
         if request.form.get("password") != request.form.get("password-new"):
             print("INFO: additional check failed: password and new password not equal; route: change/password")
-            return redirect("/change/password")
+            return redirect(url_for('change_password'))
 
         # Query database for account details
         rows = db.execute("SELECT id, username, hash FROM users WHERE id = :id", id=session['user_id'])
 
         # If there is no user with that id or password do not match, redirect
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            return redirect("/change/password")
+            return redirect(url_for('change_password'))
         
         # Generate hash for new password
         new_hash = generate_password_hash(request.form.get("password-new"), method='pbkdf2:sha256', salt_length=8)
@@ -240,7 +256,7 @@ def change_password():
         db.execute("UPDATE users SET hash = :new_hash WHERE id = :id", new_hash=new_hash, id=session['user_id'])
 
         flash('Password changed.')
-        return redirect("/")
+        return redirect(url_for('user'))
 
     else:
         return render_template("changepassword.html")
@@ -256,13 +272,13 @@ def change_email():
         # Additional check if password was submited
         if not request.form.get("password"):
             print("INFO: additional password submit check failed; route: change/email")
-            return redirect("/change/email")
+            return redirect(url_for('change_email'))
 
         # Check if email avaiable
         rows = db.execute(db.execute("SELECT id FROM users WHERE email = :email", email=request.form.get("email-new")))
         if len(rows) != 0:
             flash('E-mail already signed to another account.')
-            return redirect("/change/email")
+            return redirect(url_for('change_email'))
 
         # Query database for account details
         rows = db.execute("SELECT id, username, hash FROM users WHERE id = :id", id=session['user_id'])
@@ -270,7 +286,7 @@ def change_email():
         # If there is no user with that id or password do not match, redirect
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
             flash('Wrong password.')
-            return redirect("/change/email")
+            return redirect(url_for('change_email'))
 
         new_email = request.form.get("email-new")
 
@@ -278,7 +294,7 @@ def change_email():
         db.execute("UPDATE users SET email = :new_email WHERE id = :id", new_email=new_email, id=session['user_id'])
 
         flash('E-mail changed.')
-        return redirect("/")
+        return redirect(url_for('user'))
 
     else:
         return render_template("changeemail.html")
@@ -372,7 +388,7 @@ def edit_profile():
         
         # Render user's account page
         flash('Profile updated.')
-        return redirect("/profile")
+        return redirect(url_for('user'))
 
     else:
         return render_template("profileedit.html", username=username, name=name, surname=surname, email=email, city=city, country=country)

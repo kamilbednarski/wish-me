@@ -7,26 +7,13 @@
 {% block main %}
     <div class="form-container-large text-center">
         <div>
-            <h2>Hello!<br>We would like to introduce you to <br><span class="logo-in-text">wish.me</span></h2>
-            <h2>Are you ready to open the box?</h2>
-            <!-- Image with gift box-->
-            <div class="pt-3 pb-3">
-                <img src="/static/image/wish-me-icon.svg" width="200" height="200">
-            </div>
-            
-            
-            <div class="btn-group" role="group">
-                <!-- Button YES -->
-                <span class="text-center pt-3 pb-3 inline">
-                    <form class="text-center" action="/yes">
-                        <input class="form-button" type="submit" value="Sure!" />
-                    </form>
-                </div>
+            <h2>OK, so you've picked the phone. Just as we thought.<br> We can't guarantee you'll get that shiny tech, but with<br><span class="logo-in-text">wish.me</span></h2>
+            <h2>your chances are getting tripled at least. Just join us, create a wishlist and share it with your friends or even computer-friendly grandma.</h2>
 
-                <!-- Button NO -->
-                <div class="text-center inline">
-                    <form class="text-center" action="/no">
-                        <input class="form-button" type="submit" value="No (Not yet...)" />
+                <!-- Button Register -->
+                <div class="text-center pt-3">
+                    <form class="text-center" action="/register">
+                        <input class="form-button-alert" type="submit" value="Register" />
                     </form>
                 </div>
             </div>
