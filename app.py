@@ -320,3 +320,10 @@ def edit_profile():
     else:
         return render_template("profileedit.html", username=username, name=name, surname=surname, email=email, city=city, country=country)
 
+
+@app.route("/profile/delete", methods=["GET"])
+@login_required
+def delete_profile():
+    return redirect("/login")
+
+
