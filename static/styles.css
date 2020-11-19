@@ -188,3 +188,12 @@ input[type="file"] {
     color: #E2F3DE;
     border: none !important;
 }
+
+.wishlist-item-container {
+    width: auto;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    max-width: 500px;
+    border-radius: 2.5rem;
+    background-color: #B1E5DE;
+}

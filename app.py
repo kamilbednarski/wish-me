@@ -274,8 +274,10 @@ def allowed_image(filename):
 @app.route("/profile/edit", methods=["GET", "POST"])
 @login_required
 def edit_profile():
+    # This method allows user to edit account details
 
     id=session["user_id"]
+
     # Query database for account details where userids are equal
     user_data = db.execute("SELECT * FROM users WHERE id = :id", id=id)
 
@@ -353,6 +355,7 @@ def edit_profile():
 def delete_profile():
 
     id=session["user_id"]
+
     if request.method == "POST":
 
         # If both password and password confirmation were sumbitted and are equal
@@ -381,4 +384,46 @@ def delete_profile():
     else:
         return render_template("profiledelete.html")
 
+@app.route("/wishlist", methods=["GET", "POST"])
+@login_required
+def wishlist():
 
+    id=session["user_id"]
+
+    # Query database for account details where userids are equal
+    user_data = db.execute("SELECT * FROM users WHERE id = :id", id=id)
+
+    name = user_data[0]["name"]
+    surname = user_data[0]["surname"]
+
+    # Select all wishes from database
+    wishlist = db.execute("SELECT wish FROM wishes WHERE id = :id", id=id)
+    dates = db.execute("SELECT date FROM wishes WHERE id = :id", id=id)
+    print(wishlist)
+    print(dates)
+
+    if len(wishlist) == 0:
+        flash("Ups... empty wishlist. Let's add a few things so you can avoid unwanted 'socks'! ;)")
+        return render_template("wishlist.html")
+
+    return render_template("wishlist.html", wishlist=wishlist, dates=dates, name=name, surname=surname)
+
+
+@app.route("/wishlist/add", methods=["GET", "POST"])
+@login_required
+def wishlist_add():
+
+    id=session["user_id"]
+
+    if request.method == "POST":
+        wish = request.form.get("new-wish")
+
+        if wish == "":
+            flash("Your wish was empty. That's weird...")
+            return redirect(url_for('wishlist'))
+
+        db.execute("INSERT INTO wishes (id, wish) VALUES (:id, :wish)", id=id, wish=wish)
+        return redirect(url_for('wishlist'))
+
+    else:
+        return redirect(url_for('wishlist'))

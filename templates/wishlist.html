@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log in
+{% endblock %}
+
+{% block main %}
+    <div class="form-container">
+        <div class="text-center pb-3">
+            <label class="form-label-l"><h2>{{ name }} {{ surname }}'s wishlist</h2></label>
+        </div>
+        <form action="/wishlist/add" method="post" id="login_form">
+            <!-- New wish -->
+            <div class="form-group">
+                <input autocomplete="off" autofocus class="form-control form-input" name="new-wish" placeholder="New wish..." type="text" required>
+            </div>
+
+            <!-- Button Add -->
+            <div class="text-center">
+                <button class="form-button" type="submit">Add</button>
+            </div>
+        </form>
+        <div class="text-center pt-5">
+            {% for record in wishlist %}
+            <div class="pb-3">
+                <div class="wishlist-item-container">
+                    <div class="form-group">
+                        <p><small>Added: {{ dates[loop.index-1]['date'] }}</small></p>
+                        <h4>{{ wishlist[loop.index-1]['wish'] }}</h4>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
