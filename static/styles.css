@@ -55,7 +55,7 @@ h5 {
 .logo {
     padding-left: 0.3rem;
     padding-right: 0.3rem;
-    color: darkslategray;
+    color: darkslategray !important;
     font-size: 2.5rem;
     font-weight: 700;
 }
@@ -128,6 +128,26 @@ h5 {
     text-decoration: none;
 }
 
+.form-button-delete {
+
+    border-radius: 1.5rem;
+    padding: 0.1rem 0.2rem 0.1rem 0.2rem;
+    background-color: #9CD4CD;
+    font-size: 1.5rem;
+    font-weight: 400;
+    border: none;
+    color: #f76e75;
+    width: 3rem;
+    height: 3rem;
+    
+}
+
+.form-button-delete:hover {
+    background-color: #749e99;
+    color: #d35a60;
+    text-decoration: none;
+}
+
 .text-medium {
     font-weight: 400;
 }
@@ -196,4 +216,8 @@ input[type="file"] {
     max-width: 500px;
     border-radius: 2.5rem;
     background-color: #B1E5DE;
+}
+
+.delete-form-no-display {
+    display: none;
 }

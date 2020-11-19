@@ -353,6 +353,7 @@ def edit_profile():
 @app.route("/profile/delete", methods=["GET", "POST"])
 @login_required
 def delete_profile():
+    # This method is used to delete account
 
     id=session["user_id"]
 
@@ -387,6 +388,7 @@ def delete_profile():
 @app.route("/wishlist", methods=["GET", "POST"])
 @login_required
 def wishlist():
+    # This method renders user's wishlist
 
     id=session["user_id"]
 
@@ -399,8 +401,6 @@ def wishlist():
     # Select all wishes from database
     wishlist = db.execute("SELECT wish FROM wishes WHERE id = :id", id=id)
     dates = db.execute("SELECT date FROM wishes WHERE id = :id", id=id)
-    print(wishlist)
-    print(dates)
 
     if len(wishlist) == 0:
         flash("Ups... empty wishlist. Let's add a few things so you can avoid unwanted 'socks'! ;)")
@@ -412,11 +412,23 @@ def wishlist():
 @app.route("/wishlist/add", methods=["GET", "POST"])
 @login_required
 def wishlist_add():
+    # This method is used to add new item to wishlist
 
     id=session["user_id"]
 
     if request.method == "POST":
         wish = request.form.get("new-wish")
+
+        if len(wish) < 2:
+            flash("Come on... One letter wish? Not even santa claus would have guessed.")
+            return redirect(url_for('wishlist'))
+
+        # Select all wishes from database
+        rows = db.execute("SELECT * FROM wishes WHERE  UPPER(wish) = UPPER(:wish)", wish=wish)
+        if len(rows) != 0:
+            flash("Already on the list. Guess that one is REALLY important! ;)")
+            return redirect(url_for('wishlist'))
+
 
         if wish == "":
             flash("Your wish was empty. That's weird...")
@@ -425,5 +437,21 @@ def wishlist_add():
         db.execute("INSERT INTO wishes (id, wish) VALUES (:id, :wish)", id=id, wish=wish)
         return redirect(url_for('wishlist'))
 
+    else:
+        return redirect(url_for('wishlist'))
+
+
+@app.route("/wishlist/delete", methods=["GET", "POST"])
+@login_required
+def wishlist_delete():
+
+    id=session["user_id"]
+    if request.method == "POST":
+
+        item_to_delete = request.form.get("delete-item")
+        db.execute("DELETE FROM wishes WHERE id = :id AND wish = :wish", id=id, wish=item_to_delete)
+        flash("Item removed from list.")
+        return redirect(url_for('wishlist'))
+    
     else:
         return redirect(url_for('wishlist'))
