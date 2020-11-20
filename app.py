@@ -44,6 +44,7 @@ db = SQL("sqlite:///wish.db")
 
 @app.route("/<username>", methods=["GET", "POST"])
 def public_profile(username):
+    # This method is used to display user's profile without log in
     # Search for username in database
     print(f"LOG INFO: SEARCHING FOR USER WITH USERNAME: {username}")
     user_data = db.execute("SELECT * FROM users WHERE username = :username", username=username)
@@ -65,8 +66,6 @@ def public_profile(username):
         else:
             image_source = "profileimg.bmp"
 
-        ##TODO
-
         # Query database for account details where userids are equal
         user_data = db.execute("SELECT * FROM users WHERE id = :id", id=id)
 
@@ -75,8 +74,6 @@ def public_profile(username):
 
         # Select all wishes from database
         wishlist = db.execute("SELECT wish FROM wishes WHERE id = :id", id=id)
-
-        ##TODO
 
         return render_template("profile_public.html", name=name, surname=surname, username=username, email=email, city=city, country=country, image_source=image_source, wishlist=wishlist)
 
@@ -511,6 +508,7 @@ def wishlist_add():
 @app.route("/wishlist/delete", methods=["GET", "POST"])
 @login_required
 def wishlist_delete():
+    # This method is used to delete items from user's wishlist
 
     id=session["user_id"]
     if request.method == "POST":
