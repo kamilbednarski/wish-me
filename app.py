@@ -42,21 +42,44 @@ app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["PNG", "JPG", "JPEG", "GIF", "BMP"]
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///wish.db")
 
-@app.route("/<username>")
+@app.route("/<username>", methods=["GET", "POST"])
 def public_profile(username):
     # Search for username in database
+    print(f"LOG INFO: SEARCHING FOR USER WITH USERNAME: {username}")
     user_data = db.execute("SELECT * FROM users WHERE username = :username", username=username)
     if len(user_data) == 1:
 
         # Save user data submitted in form
         username = username
-        name = user_data["0"]["name"]
-        surname = user_data["0"]["surname"]
-        email = user_data["0"]["email"]
-        city = user_data["0"]["city"]
-        country = user_data["0"]["country"]
+        id = user_data[0]["id"]
+        name = user_data[0]["name"]
+        surname = user_data[0]["surname"]
+        email = user_data[0]["email"]
+        city = user_data[0]["city"]
+        country = user_data[0]["country"]
 
-        return render_template("profile_public.html", name=name, surname=surname, username=username, email=email, city=city, country=country)
+        user_image = db.execute("SELECT * FROM images WHERE id = :id", id=id)
+        if user_image[0]["image"] == 1:
+            image_source = f"/uploads/{id}.jpg"
+
+        else:
+            image_source = "profileimg.bmp"
+
+        ##TODO
+
+        # Query database for account details where userids are equal
+        user_data = db.execute("SELECT * FROM users WHERE id = :id", id=id)
+
+        name = user_data[0]["name"]
+        surname = user_data[0]["surname"]
+
+        # Select all wishes from database
+        wishlist = db.execute("SELECT wish FROM wishes WHERE id = :id", id=id)
+
+        ##TODO
+
+        return render_template("profile_public.html", name=name, surname=surname, username=username, email=email, city=city, country=country, image_source=image_source, wishlist=wishlist)
+
     else:
         flash("There's no user with that username.")
         return redirect(url_for('index'))
@@ -384,7 +407,7 @@ def edit_profile():
         # If country provided
         if request.form.get("country"):
             new_country = request.form.get("country")
-            db.execute("UPDATE users SET name = :new_country WHERE id = :id", new_country=new_country, id=id)
+            db.execute("UPDATE users SET country = :new_country WHERE id = :id", new_country=new_country, id=id)
         
         # Render user's account page
         flash('Profile updated.')

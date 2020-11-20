@@ -39,9 +39,15 @@
     <body>
         <!-- bg-light border -->
         <nav class="navbar navbar-expand-md navbar-light nav-bar-color">
+            {% if session.user_id %}
             <div class="logo-surrounding">
                 <!--<i class="fas fa-gift logo-icon"></i>--><a class="logo">wish.me</a>
             </div>
+            {% else %}
+            <div class="logo-surrounding">
+                <!--<i class="fas fa-gift logo-icon"></i>--><a href="/"class="logo">wish.me</a>
+            </div>
+            {% endif %}
             <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler toggler-button" data-target="#navbar" data-toggle="collapse" type="button">
                 <span class="navbar-toggler-icon toggler-button"></span>
             </button>

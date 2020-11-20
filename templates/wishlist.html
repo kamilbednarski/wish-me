@@ -27,7 +27,7 @@
                     <form action="/wishlist/delete" method="post">
                         <div class="form-group">
                             <p><small>Added: {{ dates[loop.index-1]['date'] }}</small></p>
-                            <h4>{{ wishlist[loop.index-1]['wish'] }}</h4>
+                            <p>{{ wishlist[loop.index-1]['wish'] }}</p>
                             <input class="delete-form-no-display" name="delete-item" value="{{ wishlist[loop.index-1]['wish'] }}">
                         </div>
                         <div class="text-center">

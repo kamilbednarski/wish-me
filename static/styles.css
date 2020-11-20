@@ -1,13 +1,14 @@
 #navbar {
+    /* top navigation bar */
     font-weight: 400;
 }
 
 ::placeholder {
+    /* placeholder text color */
     color: lightgrey !important;    
 }
 
 body {
-    /*background-color: #FAFAFA;*/
     font-family: 'Roboto Condensed', sans-serif;
     background-color: #FFF0CC;
     background-image: url('/static/image/background-segment.svg');
@@ -21,9 +22,10 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 5vh;
+    padding-top: 2vh;
     padding-bottom: 5vh;
     color: darkslategray;
+    min-height: 90vh;
 }
 
 h2 {
@@ -39,14 +41,17 @@ h5 {
 }
 
 .toggler-button {
+    /* button - no border */
     border: none;
 }
 
 .nav-bar-color {
+    /* navigation bar color */
     background-color: #E2F3DE
 }
 
 .logo-icon {
+    /* top logo icon */
     font-size: 32px;
     padding: 7px;
     color: #000000;
@@ -59,6 +64,7 @@ h5 {
 }
 
 .logo {
+    /* logo text */
     padding-left: 0.3rem;
     padding-right: 0.3rem;
     color: darkslategray !important;
@@ -67,28 +73,38 @@ h5 {
 }
 
 .logo:hover {
+    /* logo text */
     text-decoration: none;
     color: darkslategray;
 }
 
 .logo-surrounding {
+    /* logo container */
     padding: 0.5rem 1rem 0.5rem 0.8rem;
     border-radius: 2rem;
     text-align: center;
 }
 
 .form-container {
+    /* main form container */
     width: 80vw;
     max-width: 500px;
-    padding: 70px;
+    padding-left: 3vw;
+    padding-right: 3vw;
+    padding-top: 50px;
+    padding-bottom: 50px;
     border-radius: 4.5rem;
     background-color: #E2F3DE;
 }
 
 .form-container-large {
+    /* main form container large */
     width: 80vw;
     max-width: 1200px;
-    padding: 70px;
+    padding-left: 3vw;
+    padding-right: 3vw;
+    padding-top: 50px;
+    padding-bottom: 50px;
     border-radius: 4.5rem;
     background-color: #E2F3DE;
 }
@@ -111,6 +127,7 @@ h5 {
 }
 
 .form-button {
+    /* form button action:submit */
     border-radius: 1.5rem;
     padding: 0.5rem 1rem 0.5rem 1rem;
     background-color: #B1E5DE;
@@ -122,11 +139,13 @@ h5 {
 }
 
 .form-button:hover {
+    /* form button action:submit */
     background-color: #9CD4CD;
     text-decoration: none;
 }
 
 .form-button-alert {
+    /* form button action:alert */
     border-radius: 1.5rem;
     padding: 0.5rem 1rem 0.5rem 1rem;
     background-color: #f76e75;
@@ -138,12 +157,13 @@ h5 {
 }
 
 .form-button-alert:hover {
+    /* form button action:alert */
     background-color: #d35a60;
     text-decoration: none;
 }
 
 .form-button-delete {
-
+    /* form button action:delete */
     border-radius: 1.5rem;
     padding: 0.1rem 0.2rem 0.1rem 0.2rem;
     background-color: #9CD4CD;
@@ -157,41 +177,55 @@ h5 {
 }
 
 .form-button-delete:hover {
+    /* form button action:delete */
     background-color: #749e99;
     color: #d35a60;
     text-decoration: none;
 }
 
 .text-medium {
+    /* medium-weight text */
     font-weight: 400;
 }
 
 .icon-gray {
+    /* icons insine page's body */
     color: darkslategray;
 }
 
 .profile-img {
+    /* profile image */
     border-radius: 50%;
     object-fit: cover;
+    width: 20vw;
+    height: 20vw;
+    max-width: 200px;
+    max-height: 200px;
+    
 }
 
 .text-href {
+    /* text style for hrefs */
     color: #F76EAB;
 }
 
 .text-href:hover {
+    /* text style for hrefs */
     color: #AB3368;
 }
 
 .text-navbar {
+    /* textstyle for navabr */
     color: darkslategray !important;
 }
 
 input[type="file"] {
+    /* file input no-display */
     display: none;
 }
 
 .file-input {
+    /* file input button */
     border-radius: 1.5rem;
     padding: 0.5rem 1rem 0.5rem 1rem;
     background-color: #B1E5DE;
@@ -207,36 +241,56 @@ input[type="file"] {
 }
 
 .file-input:hover {
+    /* file input button */
     background-color: #9CD4CD;
     text-decoration: none;
 }
 
 .footer-container {
+    /* webpage footer */
     background-color: #E2F3DE;
     padding: 0.3rem;
     
 }
 
 .info-alert {
+    /* alerts for Flask's function flash() */
     background-color: darkslategray;
     color: #E2F3DE;
     border: none !important;
 }
 
 .wishlist-item-container {
+    /* container for each position in wishlist */
     width: auto;
     padding-top: 1rem;
     padding-bottom: 1rem;
     max-width: 500px;
-    border-radius: 2.5rem;
+    border-radius: 1.5rem;
     background-color: #B1E5DE;
 }
 
 .delete-form-no-display {
+    /* hidden form */
     display: none;
 }
 
+.image-quiz {
+    width: 36vw;
+    height: 36vw;
+    max-width: 350px;
+    max-height: 350px;
+}
+
 .image-quiz:hover {
+    /* svg graphics setting for homepage */
     transform: scale(1.2);
     z-index: 1;
 }
+
+.index-form-image {
+    width: 20vw;
+    max-width: 240px;
+    height: 20vw;
+    max-height: 240px;
+}  
