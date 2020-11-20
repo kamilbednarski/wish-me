@@ -122,33 +122,41 @@ def register():
 
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
-
+        print("###########LOG INFO: register() START")
         # Save user data submitted in form
-        name = str(request.form.get("first-name"))
+        
+        name = request.form.get("first-name")
+        print(f"###########LOG INFO: register() name: {name}")
         surname = str(request.form.get("surname"))
+        print(f"###########LOG INFO: register() surname: {surname}")
         username = str(request.form.get("username"))
+        print(f"###########LOG INFO: register() username: {username}")
         email = str(request.form.get("email"))
+        print(f"###########LOG INFO: register() email: {email}")
         city = str(request.form.get("city"))
+        print(f"###########LOG INFO: register() city: {city}")
         country = str(request.form["country"])
+        print(f"###########LOG INFO: register() country: {country}")
 
         # Check if username avaiable
-        rows = db.execute(db.execute("SELECT username FROM users WHERE username = :username", username=username))
+        rows = db.execute("SELECT * FROM users WHERE username = :username", username=username)
+        print(f"###########LOG INFO: register() check if username in db")
+        print(rows)
         if len(rows) != 0:
             flash('Username already taken.')
-            return redirect(url_for('login'))
+            return redirect("/login")
 
         # Check if email avaiable
-        rows = db.execute(db.execute("SELECT id FROM users WHERE email = :email", email=email))
+        rows = db.execute("SELECT id FROM users WHERE email = :email", email=email)
         if len(rows) != 0:
             flash('E-mail already signed to another account.')
-            return redirect(url_for('login'))
+            return redirect("/login")
 
         # Generate password hash
         hash = generate_password_hash(request.form.get("password"), method='pbkdf2:sha256', salt_length=8)
-
+        print(f"###########LOG INFO: register() hash: {hash}")
         # Add new user to database, table 'users' and 'images'
-        db.execute("INSERT INTO users (username, hash, name, surname, email, city, country) VALUES (:iusername, :ihash, :iname, :isurname, :iemail, :icity, :icountry)", 
-                    iusername=username, ihash=hash, iname=name, isurname=surname, iemail=email, icity=city, icountry=country)
+        db.execute("INSERT INTO users (username, hash, name, surname, email, city, country) VALUES (:username, :hash, :name, :surname, :email, :city, :country)", username=username, hash=hash, name=name, surname=surname, email=email, city=city, country=country)
         id = db.execute("SELECT id FROM users WHERE username = :username", username=username)
         db.execute("INSERT INTO images (id) VALUES (:id)", id=id[0]['id'])
 
@@ -173,19 +181,22 @@ def login():
         # Additional check if username was submited
         if not request.form.get("username"):
             print("INFO: INFO: additional username submit check failed")
-            return redirect(url_for('login'))
+            flash("Wrong password or username.")
+            return render_template('login.html')
 
         # Additional check if password was submited
         if not request.form.get("password"):
             print("INFO: additional password submit check failed")
-            return redirect(url_for('login'))
+            flash("Wrong password or username.")
+            return render_template('login.html')
 
         # Query database for account details
         rows = db.execute("SELECT id, username, hash FROM users WHERE username = :username", username=request.form.get("username"))
 
         # If there is no user with that username or password do not match, redirect to login
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            return redirect(url_for('login'))
+            flash("Wrong password or username.")
+            return render_template('login.html')
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
@@ -254,12 +265,13 @@ def change_password():
 
         # Old password and new password input fields are both set to required in html code
         # Additional check if password was submited
-        if not request.form.get("password") or not request.form.get("password-new"):
+        if not request.form.get("password") or not request.form.get("password-new") or not request.form.get("password-new-confirm"):
             print("INFO: additional password submit check failed; route: change/password")
             return redirect(url_for('change_password'))
 
-        if request.form.get("password") != request.form.get("password-new"):
+        if request.form.get("password-new") != request.form.get("password-new-confirm"):
             print("INFO: additional check failed: password and new password not equal; route: change/password")
+            flash("New password and it's confirmation aren't equal.")
             return redirect(url_for('change_password'))
 
         # Query database for account details
@@ -267,6 +279,7 @@ def change_password():
 
         # If there is no user with that id or password do not match, redirect
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
+            flash("Wrong password.")
             return redirect(url_for('change_password'))
         
         # Generate hash for new password
@@ -295,7 +308,7 @@ def change_email():
             return redirect(url_for('change_email'))
 
         # Check if email avaiable
-        rows = db.execute(db.execute("SELECT id FROM users WHERE email = :email", email=request.form.get("email-new")))
+        rows = db.execute("SELECT id FROM users WHERE email = :email", email=request.form.get("email-new"))
         if len(rows) != 0:
             flash('E-mail already signed to another account.')
             return redirect(url_for('change_email'))
@@ -418,30 +431,39 @@ def edit_profile():
 @login_required
 def delete_profile():
     # This method is used to delete account
-
+    
     id=session["user_id"]
 
     if request.method == "POST":
-
+        
         # If both password and password confirmation were sumbitted and are equal
-        if request.form.get("password") and request.form.get("password-confirm" and request.form.get("password") == request.form.get("password-confirm")):
+        if request.form.get("password") and request.form.get("password-confirm") and request.form.get("password") == request.form.get("password-confirm"):
             
             # Find user in database
             rows = db.execute("SELECT hash FROM users WHERE id = :id", id=id)
-
+            
             # Check if password is correct
             if check_password_hash(rows[0]["hash"], request.form.get("password")):
 
-                # Remove user's data from database
+                # Delete profile image if one exists
+                images = db.execute("SELECT * FROM images WHERE id = :id", id=id)
+                is_image = images[0]["image"]
+                if is_image == 1:
+                    # Remove user's profile image
+                    os.remove(f"static/image/uploads/{id}.jpg")
+                    print("INFO: user's profile image deleted from image/uploads; route: profile/delete")
+                
+                # Remove wishlist
+                db.execute("DELETE FROM wishes WHERE id = :id", id=id)
+                
+                # Remove from users db
                 db.execute("DELETE FROM users WHERE id = :id", id=id)
                 print("INFO: user deleted from users; route: profile/delete")
+
+                # Remove from images db
                 db.execute("DELETE FROM images WHERE id = :id", id=id)
                 print("INFO: user deleted from images; route: profile/delete")
-
-                # Remove user's profile image
-                os.remove(f"/static/image/uploads/{id}.jpg")
-                print("INFO: user's profile image deleted from image/uploads; route: profile/delete")
-
+                
                 # Redirect to login page
                 flash('Account succesfully deleted.')
                 return redirect("/login")
@@ -468,7 +490,7 @@ def wishlist():
 
     if len(wishlist) == 0:
         flash("Ups... empty wishlist. Let's add a few things so you can avoid unwanted 'socks'! ;)")
-        return render_template("wishlist.html")
+        return render_template("wishlist.html", name=name, surname=surname)
 
     return render_template("wishlist.html", wishlist=wishlist, dates=dates, name=name, surname=surname)
 
